@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 //import { Firestore , doc, setDoc } from '@angular/fire/firestore';
 
 @Injectable({
@@ -15,5 +15,9 @@ export class AuthService {
 
   loginUsuario(email: string, password: string): Promise<UserCredential> {
     return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  logoutUsuario() {
+    return signOut(this.auth);
   }
 }
