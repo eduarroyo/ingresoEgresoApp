@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Auth, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, UserCredential, authState, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Observable, map } from 'rxjs';
 //import { Firestore , doc, setDoc } from '@angular/fire/firestore';
 
 @Injectable({
@@ -8,6 +9,12 @@ import { Auth, UserCredential, createUserWithEmailAndPassword, signInWithEmailAn
 export class AuthService {
 
   constructor(private auth: Auth /*, private firestore: Firestore*/) { }
+
+  initAuthListener() {
+    this.auth.beforeAuthStateChanged(fuser => {
+      console.log(fuser);
+    });
+  }
 
   crearUsuario(name: string, email: string, password: string) {
     return createUserWithEmailAndPassword(this.auth, email, password);
@@ -19,5 +26,11 @@ export class AuthService {
 
   logoutUsuario() {
     return signOut(this.auth);
+  }
+
+  isAuth(): Observable<boolean> {
+    return authState(this.auth).pipe(
+      map((fbUser) => fbUser !== null)
+    );
   }
 }
