@@ -27,18 +27,30 @@ export class LoginComponent implements OnInit {
   login() {
     if(!this.loginForm.valid) return;
 
+    Swal.fire({
+      title: 'Accediendo...',
+      showConfirmButton: false,
+      showCloseButton: false,
+      didOpen: () => {
+        Swal.showLoading(null);
+      }
+    });
+
     const {email, password} = this.loginForm.value;
     this.authService
       .loginUsuario(email, password)
       .then(user => {
         console.log(user);
+        Swal.close();
         this.router.navigate(['/']);
       })
-      .catch(err =>
+      .catch(err => {
+        Swal.close();
         Swal.fire({
           icon: "error",
           title: "Oops...",
           text: err.message
-        }));
+        });
+      });
   }
 }
