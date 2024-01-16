@@ -16,6 +16,10 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { environment } from 'src/environments/environment';
 
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { appReducers } from './app.reducer';
+
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -40,6 +44,11 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
     provideFirebaseApp(() => initializeApp( environment.firebase )),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    StoreModule.forRoot(appReducers),
+    StoreDevtoolsModule.instrument( {
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
