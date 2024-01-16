@@ -2,18 +2,40 @@ import { Injectable } from '@angular/core';
 import { Auth, UserCredential, authState, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { Observable, map } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
-import { Firestore , addDoc, collection } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, getDoc, DocumentData, query, where, getDocs } from '@angular/fire/firestore';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.reducer';
+import * as authActions from '../auth/auth.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private auth: Auth, private firestore: Firestore) { }
+  constructor(private auth: Auth,
+              private firestore: Firestore,
+              private store: Store<AppState>) { }
 
   initAuthListener() {
     this.auth.beforeAuthStateChanged(fuser => {
       console.log(fuser);
+      
+      if(fuser) {
+        //logado
+        const q = query(collection(this.firestore, "user"), where("uid", "==", fuser.uid));
+
+        getDocs(q)
+          .then(qs => {
+            if(qs.docs.length === 1) {
+              const tempUsu = qs.docs[0].data();
+              const usu: Usuario = new Usuario(tempUsu["uid"], tempUsu["nombre"], tempUsu["email"]);
+              this.store.dispatch(authActions.setUser({user: usu}));
+            }
+          })
+          .catch(e => console.error(e));
+      } else {
+        this.store.dispatch(authActions.unsetUser());
+      }
     });
   }
 

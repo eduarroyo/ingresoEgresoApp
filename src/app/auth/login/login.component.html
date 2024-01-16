@@ -12,6 +12,7 @@
                 <input type="email"
                        class="form-control"
                        placeholder="Email"
+                       [disabled]="cargando"
                        formControlName="email">
                 <div class="input-group-append">
                   <span class="input-group-text">
@@ -25,6 +26,7 @@
               <div class="input-group">
                 <input type="password"
                   class="form-control"
+                  [disabled]="cargando"
                   formControlName="password">
                 <div class="input-group-append">
                   <span class="input-group-text">
@@ -34,7 +36,18 @@
               </div>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-primary submit-btn btn-block" [disabled]="loginForm.invalid">Login</button>
+              <button type="submit" 
+                      class="btn btn-primary submit-btn btn-block"
+                      [disabled]="loginForm.invalid"
+                      *ngIf="!cargando">
+                Login
+              </button>
+              <button type="button" 
+                      class="btn btn-primary submit-btn btn-block disabled"
+                      *ngIf="cargando">
+                <i class="fa fa-spin- fa-sync"></i>
+                Espere...
+              </button>
             </div>
 
             <div class="text-block text-center my-3">
