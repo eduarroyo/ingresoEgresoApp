@@ -56,9 +56,10 @@ export class AuthService {
     return createUserWithEmailAndPassword(this.auth, email, password)
             .then(async ({user}) => {
               const newUser = new Usuario(user.uid, name, user.email ?? "" );
-              setDoc(doc(this.firestore, user.uid, 'user'), {...newUser})
-                .then(result => console.log(result));
-            });
+              return setDoc(doc(this.firestore, user.uid, 'user'), {...newUser});
+            })
+            .then(result => console.log(result))
+            .catch(err => console.error(err));
   }
 
   loginUsuario(email: string, password: string): Promise<UserCredential> {

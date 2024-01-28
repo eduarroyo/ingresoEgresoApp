@@ -45,15 +45,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(ui.isLoading());
 
-    // Swal.fire({
-    //   title: 'Accediendo...',
-    //   showConfirmButton: false,
-    //   showCloseButton: false,
-    //   didOpen: () => {
-    //     Swal.showLoading(null);
-    //   }
-    // });
-
     const {email, password} = this.loginForm.value;
     this.authService
       .loginUsuario(email, password)
